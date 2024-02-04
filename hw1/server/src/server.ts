@@ -1,5 +1,6 @@
 import UrlLoader from "./urlLoader";
 import AuthenticateUser from "./authenticateUser";
+
 import { urls } from "./assets/url";
 import { users } from "./assets/users";
 
@@ -14,34 +15,19 @@ app.listen(port, async () => {
 
   const loader = new UrlLoader(urls);
 
+  const userAuth = new AuthenticateUser();
+
+  const authenticatedUser = await userAuth.auth(users[0].username, users[0].password);
+
+  console.log('User authenticated:', authenticatedUser);
+
   try {
 
     await loader.loadingOneByOne();
+
     const results = loader.getResults();
     console.log(results);
 
-
-    for (const user of users) {
-
-      const userAuth = new AuthenticateUser(user.username, user.password);
-
-      try {
-
-        const authenticatedUser = await userAuth.auth();
-        console.log('User authenticated:', authenticatedUser);
-
-      } catch (error) {
-
-        console.error(error);
-
-      }
-
-    }
-
-  } catch (error) {
-
-    console.error(error);
-
-  }
+  } catch (error) { console.error(error); }
 
 });

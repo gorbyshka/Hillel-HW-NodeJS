@@ -20,16 +20,20 @@ class UrlLoader {
     }
     loadingOneByOne() {
         return __awaiter(this, void 0, void 0, function* () {
+            const uniqueResults = [];
             for (const url of this.urls) {
                 try {
                     const response = yield axios_1.default.get(url);
-                    this.results.push({ data: response.data, error: null });
+                    const existingResult = uniqueResults.find(result => result.data === response.data && result.error === null);
+                    if (!existingResult)
+                        uniqueResults.push({ data: response.data, error: null });
                 }
                 catch (errorData) {
                     console.log(errorData);
-                    this.results.push({ data: null, error: errorData });
+                    uniqueResults.push({ data: null, error: errorData });
                 }
             }
+            this.results = uniqueResults;
         });
     }
     getResults() { return this.results; }

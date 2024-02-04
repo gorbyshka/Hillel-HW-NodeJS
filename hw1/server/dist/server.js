@@ -22,20 +22,13 @@ const port = 3000;
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`PORT: ${port}`);
     const loader = new urlLoader_1.default(url_1.urls);
+    const userAuth = new authenticateUser_1.default();
+    const authenticatedUser = yield userAuth.auth(users_1.users[0].username, users_1.users[0].password);
+    console.log('User authenticated:', authenticatedUser);
     try {
         yield loader.loadingOneByOne();
         const results = loader.getResults();
         console.log(results);
-        for (const user of users_1.users) {
-            const userAuth = new authenticateUser_1.default(user.username, user.password);
-            try {
-                const authenticatedUser = yield userAuth.auth();
-                console.log('User authenticated:', authenticatedUser);
-            }
-            catch (error) {
-                console.error(error);
-            }
-        }
     }
     catch (error) {
         console.error(error);

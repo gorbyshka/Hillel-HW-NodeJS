@@ -15,23 +15,28 @@ class UrlLoader {
 
     public async loadingOneByOne(): Promise<void> {
 
+        const uniqueResults: UrlResult[] = [];
+
         for (const url of this.urls) {
 
             try {
 
                 const response: AxiosResponse = await axios.get(url);
 
-                this.results.push({ data: response.data, error: null });
+                const existingResult = uniqueResults.find(result => result.data === response.data && result.error === null);
+
+                if (!existingResult) uniqueResults.push({ data: response.data, error: null });
 
             } catch (errorData) {
 
                 console.log(errorData);
-
-                this.results.push({ data: null, error: errorData });
+                uniqueResults.push({ data: null, error: errorData });
 
             }
 
         }
+
+        this.results = uniqueResults;
 
     }
 
